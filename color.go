@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var colorMap = map[string]string {
+var ColorMap = map[string]string {
 	"black": "0",
 	"red": "1",
 	"green": "2",
@@ -21,7 +21,7 @@ var colorMap = map[string]string {
 	"default": "9",
 }
 
-var brightColor = map[string]string {
+var BrightColor = map[string]string {
 	"gray": "0",
 	"bright-red": "1",
 	"bright-green": "2",
@@ -32,7 +32,7 @@ var brightColor = map[string]string {
 	"bright-white": "7",
 }
 
-var optionsMap = map[string]map[string]string {
+var OptionsMap = map[string]map[string]string {
 	"bold": {
 		"set": "1",
 		"unset": "22",
@@ -55,13 +55,13 @@ var optionsMap = map[string]map[string]string {
 	},
 }
 
-type color struct {
+type Color struct {
 	foreground string
 	background string
 	options []string
 }
 
-func (c *color) Set() string {
+func (c *Color) Set() string {
 	var setCodes []string
 
 	if len(c.foreground) > 0 {
@@ -72,7 +72,7 @@ func (c *color) Set() string {
 	}
 
 	for _, option := range c.options {
-		val := optionsMap[option]["set"]
+		val := OptionsMap[option]["set"]
 		setCodes = append(setCodes, val)
 	}
 
@@ -83,7 +83,7 @@ func (c *color) Set() string {
 	return fmt.Sprintf("\033[%sm", strings.Join(setCodes, ";"))
 }
 
-func (c *color) Unset() string {
+func (c *Color) Unset() string {
 	var unsetCodes []string
 
 	if len(c.foreground) > 0 {
@@ -95,7 +95,7 @@ func (c *color) Unset() string {
 	}
 
 	for _, option := range c.options {
-		val := optionsMap[option]["unset"]
+		val := OptionsMap[option]["unset"]
 		unsetCodes = append(unsetCodes, val)
 	}
 
@@ -106,14 +106,14 @@ func (c *color) Unset() string {
 	return fmt.Sprintf("\033[%sm", strings.Join(unsetCodes, ";"))
 }
 
-func (c *color) Apply(text string) string {
+func (c *Color) Apply(text string) string {
 	return c.Set() + text + c.Unset()
 }
 
-func NewColor(foreground string, background string) *color {
+func NewColor(foreground string, background string) *Color {
 	foreground, _ = parseColor(foreground, false)
 	background, _ = parseColor(background, true)
-	color := &color{
+	color := &Color{
 		foreground: foreground,
 		background: background,
 	}
@@ -124,12 +124,12 @@ func NewColorWithOptions(
 	foreground string,
 	background string,
 	options []string,
-	) *color {
+	) *Color {
 
 	foreground, _ = parseColor(foreground, false)
 	background, _ = parseColor(background, true)
 
-	color := &color{
+	color := &Color{
 		foreground: foreground,
 		background: background,
 		options: options,
@@ -158,7 +158,7 @@ func parseColor(color string, background bool) (string, error) {
 		}
 
 		if 6 != len(color) {
-			return "", errors.New(fmt.Sprintf(`invalid "%s" color.`, color))
+			return "", errors.New(fmt.Sprintf(`invalid "%s" Color.`, color))
 		}
 
 		val, err := convertHexColorToAnsi(color)
@@ -168,11 +168,11 @@ func parseColor(color string, background bool) (string, error) {
 		return prefix + val, nil
 	}
 
-	if val,ok := colorMap[color]; ok {
+	if val,ok := ColorMap[color]; ok {
 		return prefix + val, nil
 	}
 
-	if val, ok := brightColor[color]; ok {
+	if val, ok := BrightColor[color]; ok {
 		prefix = "9"
 		if background {
 			prefix = "10"
@@ -181,7 +181,7 @@ func parseColor(color string, background bool) (string, error) {
 	}
 
 	errMsg := fmt.Sprintf(
-		`invalid "%s" color name`,
+		`invalid "%s" Color name`,
 		color,
 	)
 	return "", errors.New(errMsg)

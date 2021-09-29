@@ -1,4 +1,4 @@
 console
 ====
-Making your go cli based application output colorful.
+This library will make your go cli based application output to be more colorful.
 

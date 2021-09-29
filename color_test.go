@@ -19,45 +19,45 @@ func TestColor_Apply(t *testing.T) {
 	os.Setenv("COLORTERM", "truecolor")
 	cases := []cs{
 		{
-			Label:      "ansi color",
+			Label:      "ansi Color",
 			Expected:   "\033[31;43m \033[39;49m",
 			Foreground: "red",
 			Background: "yellow",
 		},
 		{
-			Label:      "ansi color with bright-red and bright-yellow",
+			Label:      "ansi Color with bright-red and bright-yellow",
 			Expected:   "\033[91;103m \033[39;49m",
 			Foreground: "bright-red",
 			Background: "bright-yellow",
 		},
 		{
-			Label:      "ansi color with underline options",
+			Label:      "ansi Color with underline options",
 			Expected:   "\033[31;43;4m \033[39;49;24m",
 			Foreground: "red",
 			Background: "yellow",
 			Options:    []string{"underscore"},
 		},
 		{
-			Label: "true color with #fff and #000",
+			Label: "true Color with #fff and #000",
 			Foreground: "#fff",
 			Background: "#000",
 			Expected: "\033[38;2;255;255;255;48;2;0;0;0m \033[39;49m",
 		},
 		{
-			Label: "true color with #ffffff and #000000",
+			Label: "true Color with #ffffff and #000000",
 			Foreground: "#ffffff",
 			Background: "#000000",
 			Expected: "\033[38;2;255;255;255;48;2;0;0;0m \033[39;49m",
 		},
 		{
-			Label: "degraded color with #f00 and #ff0",
+			Label: "degraded Color with #f00 and #ff0",
 			Foreground: "#f00",
 			Background: "#ff0",
 			Expected: "\033[31;43m \033[39;49m",
 			TestDegraded: true,
 		},
 		{
-			Label: "degraded color with #c0392b and #f1c40f",
+			Label: "degraded Color with #c0392b and #f1c40f",
 			Foreground: "#c0392b",
 			Background: "#f1c40f",
 			Expected: "\033[31;43m \033[39;49m",

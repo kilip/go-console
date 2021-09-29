@@ -13,17 +13,17 @@ const (
 	FormatPlain = 4
 )
 
-type OutputFormatter interface {
+type Formatter interface {
 	Format(message string) string
 }
 
 type Output struct {
 	writer io.Writer
 	verbosity int
-	formatter OutputFormatter
+	formatter Formatter
 }
 
-func NewOutput(writer io.Writer, formatter OutputFormatter) *Output {
+func NewOutput(writer io.Writer, formatter Formatter) *Output {
 	return &Output{
 		writer: writer,
 		verbosity: VerbosityNormal,
@@ -39,7 +39,7 @@ func (o *Output) GetVerbosity() int {
 	return o.verbosity
 }
 
-func (o *Output) GetFormatter() OutputFormatter {
+func (o *Output) GetFormatter() Formatter {
 	return o.formatter
 }
 
