@@ -1,4 +1,5 @@
 name: "Tests"
+
 on:
   push:
   pull_request:
@@ -10,7 +11,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         go: [1.16, 1.17]
+
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Set up Go 1.17
         uses: actions/setup-go@v2
@@ -18,7 +21,7 @@ jobs:
           go-version: ${{ matrix.go}}
 
       - name: Check out code
-        uses: actions/checkout/v2
+        uses: actions/checkout@v2
 
       - name: Download dependencies
         run: go mod download
