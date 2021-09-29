@@ -23,7 +23,7 @@ func NewFormatterStyle(foreground string, background string) *Style {
 
 //NewFormatterStyleO creates new Style object and set options
 func NewFormatterStyleO(foreground string, background string, options []string) *Style {
-	clr := console.NewColorWithOptions(foreground, background, options)
+	clr := console.NewColorWithO(foreground, background, options)
 
 	style := &Style{
 		color:                 clr,
@@ -33,6 +33,16 @@ func NewFormatterStyleO(foreground string, background string, options []string) 
 		handlesHrefGracefully: defaultHandlesHrefGracefully(),
 	}
 	return style
+}
+
+func (s *Style) SetForeground(color string) {
+	s.foreground = color
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
+}
+
+func (s *Style) SetBackground(color string) {
+	s.background = color
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
 }
 
 func (s *Style) Apply(text string) string {
@@ -50,7 +60,7 @@ func (s *Style) SetHref(href string) {
 func (s *Style) SetOption(option string) {
 	if false == strings.Contains(strings.Join(s.options, " "), option) {
 		s.options = append(s.options, option)
-		s.color = console.NewColorWithOptions(s.foreground, s.background, s.options)
+		s.color = console.NewColorWithO(s.foreground, s.background, s.options)
 	}
 }
 
@@ -64,12 +74,12 @@ func (s *Style) UnsetOption(option string) {
 	}
 
 	s.options = options
-	s.color = console.NewColorWithOptions(s.foreground, s.background, s.options)
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
 }
 
 func (s *Style) SetOptions(options []string) {
 	s.options = options
-	s.color = console.NewColorWithOptions(s.foreground, s.background, s.options)
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
 }
 
 func defaultHandlesHrefGracefully() bool {

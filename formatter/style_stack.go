@@ -69,7 +69,8 @@ func (s *StyleStack) PopS(style *Style) (ps *Style, err error) {
 		return s.emptyStyle, nil
 	}
 
-	for i, stack := range s.styles {
+	for i := len(s.styles) - 1; i >= 0; i-- {
+		stack := s.styles[i]
 		if stack.Apply("") == style.Apply("") {
 			s.styles = s.styles[0:i]
 			return stack, nil
