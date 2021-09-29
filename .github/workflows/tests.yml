@@ -37,12 +37,12 @@ jobs:
         run: echo "COVERAGE=1" >> $GITHUB_ENV
 
       - name: Run tests
-        run: |
-          if [ "$COVERAGE" = '1' ]; then
-            go test -race -coverprofile=coverage.out -covermode=atomic
-          else
-            go test -race ./...
-          fi
+        run: go test -race ./...
+        if: false == matrix.coverage
+
+      - name: Run tests with coverage
+        if: matrix.coverage
+        run: go test -race ./... -coverprofile=coverage.out -covermode=atomic
 
       - name: Upload coverage
         if: matrix.coverage
