@@ -9,48 +9,48 @@ import (
 	"strings"
 )
 
-var ColorMap = map[string]string {
-	"black": "0",
-	"red": "1",
-	"green": "2",
-	"yellow": "3",
-	"blue": "4",
+var ColorMap = map[string]string{
+	"black":   "0",
+	"red":     "1",
+	"green":   "2",
+	"yellow":  "3",
+	"blue":    "4",
 	"magenta": "5",
-	"cyan": "6",
-	"white": "7",
+	"cyan":    "6",
+	"white":   "7",
 	"default": "9",
 }
 
-var BrightColor = map[string]string {
-	"gray": "0",
-	"bright-red": "1",
-	"bright-green": "2",
-	"bright-yellow": "3",
-	"bright-blue": "4",
+var BrightColor = map[string]string{
+	"gray":           "0",
+	"bright-red":     "1",
+	"bright-green":   "2",
+	"bright-yellow":  "3",
+	"bright-blue":    "4",
 	"bright-magenta": "5",
-	"bright-cyan": "6",
-	"bright-white": "7",
+	"bright-cyan":    "6",
+	"bright-white":   "7",
 }
 
-var OptionsMap = map[string]map[string]string {
+var OptionsMap = map[string]map[string]string{
 	"bold": {
-		"set": "1",
+		"set":   "1",
 		"unset": "22",
 	},
 	"underscore": {
-		"set": "4",
+		"set":   "4",
 		"unset": "24",
 	},
 	"blink": {
-		"set": "5",
+		"set":   "5",
 		"unset": "25",
 	},
 	"reverse": {
-		"set": "7",
+		"set":   "7",
 		"unset": "27",
 	},
 	"conceal": {
-		"set": "8",
+		"set":   "8",
 		"unset": "28",
 	},
 }
@@ -58,7 +58,7 @@ var OptionsMap = map[string]map[string]string {
 type Color struct {
 	foreground string
 	background string
-	options []string
+	options    []string
 }
 
 func (c *Color) Set() string {
@@ -124,7 +124,7 @@ func NewColorWithOptions(
 	foreground string,
 	background string,
 	options []string,
-	) *Color {
+) *Color {
 
 	foreground, _ = parseColor(foreground, false)
 	background, _ = parseColor(background, true)
@@ -132,13 +132,13 @@ func NewColorWithOptions(
 	color := &Color{
 		foreground: foreground,
 		background: background,
-		options: options,
+		options:    options,
 	}
 	return color
 }
 
 func parseColor(color string, background bool) (string, error) {
-	if len(color) == 0{
+	if len(color) == 0 {
 		return "", nil
 	}
 
@@ -162,13 +162,13 @@ func parseColor(color string, background bool) (string, error) {
 		}
 
 		val, err := convertHexColorToAnsi(color)
-		if  err != nil {
+		if err != nil {
 			return "", err
 		}
 		return prefix + val, nil
 	}
 
-	if val,ok := ColorMap[color]; ok {
+	if val, ok := ColorMap[color]; ok {
 		return prefix + val, nil
 	}
 
@@ -187,7 +187,7 @@ func parseColor(color string, background bool) (string, error) {
 	return "", errors.New(errMsg)
 }
 
-func convertHexColorToAnsi(color string) (string, error){
+func convertHexColorToAnsi(color string) (string, error) {
 	hexdec, err := strconv.ParseInt(color, 16, 0)
 	if nil != err {
 		return "", err
@@ -205,7 +205,7 @@ func convertHexColorToAnsi(color string) (string, error){
 	return fmt.Sprintf("8;2;%d;%d;%d", r, g, b), nil
 }
 
-func degradeHexColorToAnsi(r int64, g int64, b int64) (string, error){
+func degradeHexColorToAnsi(r int64, g int64, b int64) (string, error) {
 	sat := float64(calcSaturation(r, g, b)) / 50
 	if 0 == sat {
 		return "", nil
@@ -214,7 +214,7 @@ func degradeHexColorToAnsi(r int64, g int64, b int64) (string, error){
 	r1 := math.Round(float64(b) / 255)
 	r2 := math.Round(float64(g) / 255)
 	r3 := math.Round(float64(r) / 255)
-	retVal := int(r1) << 2 | int(r2) << 1 | int(r3)
+	retVal := int(r1)<<2 | int(r2)<<1 | int(r3)
 	return strconv.Itoa(retVal), nil
 }
 

@@ -8,11 +8,11 @@ import (
 )
 
 type Style struct {
-	color *console.Color
-	foreground string
-	background string
-	options []string
-	href string
+	color                 *console.Color
+	foreground            string
+	background            string
+	options               []string
+	href                  string
 	handlesHrefGracefully bool
 }
 
@@ -20,10 +20,10 @@ func NewFormatterStyle(foreground string, background string, options []string) *
 	clr := console.NewColorWithOptions(foreground, background, options)
 
 	style := &Style{
-		color: clr,
-		options: options,
-		foreground: foreground,
-		background: background,
+		color:                 clr,
+		options:               options,
+		foreground:            foreground,
+		background:            background,
 		handlesHrefGracefully: defaultHandlesHrefGracefully(),
 	}
 	return style
@@ -31,7 +31,7 @@ func NewFormatterStyle(foreground string, background string, options []string) *
 
 func (s *Style) Apply(text string) string {
 	if "" != s.href && s.handlesHrefGracefully {
-		text = "\033]8;;"+s.href+"\033"+ text + "\033]8;;\033\\"
+		text = "\033]8;;" + s.href + "\033" + text + "\033]8;;\033\\"
 	}
 
 	return s.color.Apply(text)
