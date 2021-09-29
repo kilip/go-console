@@ -3,14 +3,14 @@ package output
 import "io"
 
 const (
-	VerbosityQuiet = 16
-	VerbosityNormal = 32
-	VerbosityVerbose = 64
+	VerbosityQuiet       = 16
+	VerbosityNormal      = 32
+	VerbosityVerbose     = 64
 	VerbosityVeryVerbose = 128
-	VerbosityDebug = 256
-	FormatNormal = 1
-	FormatRaw   = 2
-	FormatPlain = 4
+	VerbosityDebug       = 256
+	FormatNormal         = 1
+	FormatRaw            = 2
+	FormatPlain          = 4
 )
 
 type Formatter interface {
@@ -18,14 +18,14 @@ type Formatter interface {
 }
 
 type Output struct {
-	writer io.Writer
+	writer    io.Writer
 	verbosity int
 	formatter Formatter
 }
 
 func NewOutput(writer io.Writer, formatter Formatter) *Output {
 	return &Output{
-		writer: writer,
+		writer:    writer,
 		verbosity: VerbosityNormal,
 		formatter: formatter,
 	}
@@ -106,7 +106,6 @@ func (o *Output) doWrite(message string, newLine bool, options int) error {
 	}
 
 	_, e := o.writer.Write([]byte(formatted))
-
 
 	return e
 }

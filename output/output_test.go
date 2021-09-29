@@ -23,60 +23,59 @@ func (w *mockObject) Format(message string) string {
 
 func TestOutput_Verbosity(t *testing.T) {
 	type cs struct {
-		Label string
-		Verbosity int
-		IsQuite bool
-		IsVerbose bool
+		Label         string
+		Verbosity     int
+		IsQuite       bool
+		IsVerbose     bool
 		IsVeryVerbose bool
-		IsDebug bool
+		IsDebug       bool
 	}
 
 	cases := []cs{
 		{
-			Label: "quite",
-			Verbosity: VerbosityQuiet,
-			IsQuite: true,
-			IsVerbose: false,
+			Label:         "quite",
+			Verbosity:     VerbosityQuiet,
+			IsQuite:       true,
+			IsVerbose:     false,
 			IsVeryVerbose: false,
-			IsDebug: false,
-
+			IsDebug:       false,
 		},
 		{
-			Label: "normal",
-			Verbosity: VerbosityNormal,
-			IsQuite: false,
-			IsVerbose: false,
+			Label:         "normal",
+			Verbosity:     VerbosityNormal,
+			IsQuite:       false,
+			IsVerbose:     false,
 			IsVeryVerbose: false,
-			IsDebug: false,
+			IsDebug:       false,
 		},
 		{
-			Label: "verbose",
-			Verbosity: VerbosityVerbose,
-			IsQuite: false,
-			IsVerbose: true,
+			Label:         "verbose",
+			Verbosity:     VerbosityVerbose,
+			IsQuite:       false,
+			IsVerbose:     true,
 			IsVeryVerbose: false,
-			IsDebug: false,
+			IsDebug:       false,
 		},
 		{
-			Label: "very verbose",
-			Verbosity: VerbosityVeryVerbose,
-			IsQuite: false,
-			IsVerbose: true,
+			Label:         "very verbose",
+			Verbosity:     VerbosityVeryVerbose,
+			IsQuite:       false,
+			IsVerbose:     true,
 			IsVeryVerbose: true,
-			IsDebug: false,
+			IsDebug:       false,
 		},
 		{
-			Label: "debug",
-			Verbosity: VerbosityDebug,
-			IsQuite: false,
-			IsVerbose: true,
+			Label:         "debug",
+			Verbosity:     VerbosityDebug,
+			IsQuite:       false,
+			IsVerbose:     true,
 			IsVeryVerbose: true,
-			IsDebug: true,
+			IsDebug:       true,
 		},
 	}
 
 	for _, v := range cases {
-		t.Run(v.Label, func(t *testing.T){
+		t.Run(v.Label, func(t *testing.T) {
 			w := new(mockObject)
 			o := NewOutput(w, w)
 			o.SetVerbosity(v.Verbosity)
@@ -92,41 +91,41 @@ func TestOutput_Verbosity(t *testing.T) {
 
 func TestOutput_Write(t *testing.T) {
 	type cs struct {
-		Name string
+		Name      string
 		Verbosity int
-		Expected string
+		Expected  string
 	}
 
-	cases := []cs {
+	cases := []cs{
 		{
-			Name: "quite",
+			Name:      "quite",
 			Verbosity: VerbosityQuiet,
-			Expected: "2",
+			Expected:  "2",
 		},
 		{
-			Name: "verbose",
+			Name:      "verbose",
 			Verbosity: VerbosityNormal,
-			Expected: "123",
+			Expected:  "123",
 		},
 		{
-			Name: "verbose",
+			Name:      "verbose",
 			Verbosity: VerbosityVerbose,
-			Expected: "1234",
+			Expected:  "1234",
 		},
 		{
-			Name: "verbose",
+			Name:      "verbose",
 			Verbosity: VerbosityVeryVerbose,
-			Expected: "12345",
+			Expected:  "12345",
 		},
 		{
-			Name: "verbose",
+			Name:      "verbose",
 			Verbosity: VerbosityDebug,
-			Expected: "123456",
+			Expected:  "123456",
 		},
 	}
 
 	for _, val := range cases {
-		t.Run(val.Name, func(t *testing.T){
+		t.Run(val.Name, func(t *testing.T) {
 			cc := qt.New(t)
 			w := new(mockObject)
 			o := NewOutput(w, w)

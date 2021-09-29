@@ -8,65 +8,65 @@ import (
 )
 
 type testCase struct {
-	Name string
+	Name       string
 	Foreground string
 	Background string
-	Options []string
-	Expected string
-	Text string
+	Options    []string
+	Expected   string
+	Text       string
 }
 
 func TestStyle_Apply(t *testing.T) {
 	cases := []testCase{
 		{
-			Name: "constructor",
+			Name:       "constructor",
 			Foreground: "green",
 			Background: "black",
-			Options: []string{"bold", "underscore"},
-			Expected: "\033[32;40;1;4mfoo\033[39;49;22;24m",
+			Options:    []string{"bold", "underscore"},
+			Expected:   "\033[32;40;1;4mfoo\033[39;49;22;24m",
 		},
 		{
-			Name: "constructor",
+			Name:       "constructor",
 			Foreground: "red",
 			Background: "",
-			Options: []string{"blink"},
-			Expected: "\033[31;5mfoo\033[39;25m",
+			Options:    []string{"blink"},
+			Expected:   "\033[31;5mfoo\033[39;25m",
 		},
 		{
-			Name: "constructor",
+			Name:       "constructor",
 			Foreground: "",
 			Background: "white",
-			Expected: "\033[47mfoo\033[49m",
+			Expected:   "\033[47mfoo\033[49m",
 		},
 		{
-			Name: "foreground",
+			Name:       "foreground",
 			Foreground: "black",
-			Expected: "\033[30mfoo\033[39m",
+			Expected:   "\033[30mfoo\033[39m",
 		},
 		{
-			Name: "foreground",
+			Name:       "foreground",
 			Foreground: "blue",
-			Expected: "\033[34mfoo\033[39m",
+			Expected:   "\033[34mfoo\033[39m",
 		},
 		{
-			Name: "foreground",
+			Name:       "foreground",
 			Foreground: "default",
-			Expected: "\033[39mfoo\033[39m",
+			Expected:   "\033[39mfoo\033[39m",
 		},
 		{
-			Name: "background",
+			Name:       "background",
 			Background: "black",
-			Expected: "\033[40mfoo\033[49m",
+			Expected:   "\033[40mfoo\033[49m",
 		},
 		{
-			Name: "background",
+			Name:       "background",
 			Background: "yellow",
-			Expected: "\033[43mfoo\033[49m",
+			Expected:   "\033[43mfoo\033[49m",
 		},
 		{
-			Name: "background",
+			Name:       "background",
 			Background: "default",
-			Expected: "\033[49mfoo\033[49m",
+			Expected:   "\033[49mfoo\033[49m",
 		},
 		{
 			Name:     "options_reverse_conceal",
@@ -75,9 +75,9 @@ func TestStyle_Apply(t *testing.T) {
 		},
 	}
 
-	for _,v := range cases {
+	for _, v := range cases {
 		name := strings.Join([]string{v.Name, v.Foreground, v.Background}, "_")
-		t.Run(name, func(t *testing.T){
+		t.Run(name, func(t *testing.T) {
 			checker := qt.New(t)
 			style := NewFormatterStyle(
 				v.Foreground,
@@ -94,7 +94,7 @@ func TestStyle_Apply(t *testing.T) {
 	}
 }
 
-func TestStyle_Options(t *testing.T){
+func TestStyle_Options(t *testing.T) {
 	checker := qt.New(t)
 	style := NewFormatterStyle("", "", []string{"reverse", "conceal"})
 
