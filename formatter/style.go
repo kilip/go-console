@@ -16,7 +16,13 @@ type Style struct {
 	handlesHrefGracefully bool
 }
 
-func NewFormatterStyle(foreground string, background string, options []string) *Style {
+//NewFormatterStyle creates new Style object
+func NewFormatterStyle(foreground string, background string) *Style {
+	return NewFormatterStyleO(foreground, background, []string{})
+}
+
+//NewFormatterStyleO creates new Style object and set options
+func NewFormatterStyleO(foreground string, background string, options []string) *Style {
 	clr := console.NewColorWithOptions(foreground, background, options)
 
 	style := &Style{

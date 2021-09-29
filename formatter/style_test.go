@@ -79,7 +79,7 @@ func TestStyle_Apply(t *testing.T) {
 		name := strings.Join([]string{v.Name, v.Foreground, v.Background}, "_")
 		t.Run(name, func(t *testing.T) {
 			checker := qt.New(t)
-			style := NewFormatterStyle(
+			style := NewFormatterStyleO(
 				v.Foreground,
 				v.Background,
 				v.Options,
@@ -96,7 +96,7 @@ func TestStyle_Apply(t *testing.T) {
 
 func TestStyle_Options(t *testing.T) {
 	checker := qt.New(t)
-	style := NewFormatterStyle("", "", []string{"reverse", "conceal"})
+	style := NewFormatterStyleO("", "", []string{"reverse", "conceal"})
 
 	checker.Assert(style.Apply("foo"), qt.Equals, "\033[7;8mfoo\033[27;28m")
 
@@ -118,7 +118,7 @@ func TestStyle_Apply_Href(t *testing.T) {
 	os.Setenv("TERMINAL_EMULATOR", "")
 
 	checker := qt.New(t)
-	style := NewFormatterStyle("", "", []string{})
+	style := NewFormatterStyleO("", "", []string{})
 	style.SetHref("idea://open/?file=/path/SomeFile.php&line=12")
 
 	expected := "\x1b]8;;idea://open/?file=/path/SomeFile.php&line=12\x1bsome URL\x1b]8;;\x1b\\"
