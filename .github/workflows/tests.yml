@@ -38,7 +38,7 @@ jobs:
 
       - name: Run tests
         run: |
-          if ["$COVERAGE" = '1']; then
+          if [ "$COVERAGE" = '1' ]; then
             go test -race -coverprofile=coverage.out -covermode=atomic
           else
             go test -race ./...
