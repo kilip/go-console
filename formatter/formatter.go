@@ -88,7 +88,8 @@ func (f *Formatter) FormatAndWrap(message string, width int) string {
 		//output += applyCurrentStyle(substrMessage, output, width, currentLineLength)
 	}
 	substrMessage := message[offset:]
-	output += f.applyCurrentStyle(substrMessage, output, width, currentLineLength)
+	_, cStyle := f.applyCurrentStyle(substrMessage, output, width, currentLineLength)
+	output += cStyle
 	if strings.Contains(output, "\000") {
 		output = strings.ReplaceAll(output, "\000", "\\")
 		output = strings.ReplaceAll(output, "\\<", "<")
@@ -119,9 +120,9 @@ func EscapeTrailingBackslash(text string) string {
 	return text
 }
 
-func (f *Formatter) applyCurrentStyle(text string, current string, width int, currentLineLength int) string {
+func (f *Formatter) applyCurrentStyle(text string, current string, width int, currentLineLength int) (c int, output string) {
 	if "" == text {
-		return ""
+		return currentLineLength, ""
 	}
 
 	if 0 == width {
@@ -129,7 +130,7 @@ func (f *Formatter) applyCurrentStyle(text string, current string, width int, cu
 			//TODO: apply current style stack
 			f.styles["info"].Apply(text)
 		}
-		return text
+		return currentLineLength, text
 	}
 
 	if 0 == currentLineLength && "" != current {
@@ -147,5 +148,5 @@ func (f *Formatter) applyCurrentStyle(text string, current string, width int, cu
 	regex := regexp.MustCompile(`(\\n)$`)
 	matches := regex.FindAllString(text, -1)
 
-	return "<info>some info</info>" + strings.Join(matches, " ") + prefix
+	return currentLineLength, "<info>some info</info>" + strings.Join(matches, " ") + prefix
 }
