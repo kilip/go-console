@@ -120,7 +120,7 @@ func NewColor(foreground string, background string) *Color {
 	return color
 }
 
-func NewColorWithOptions(
+func NewColorWithO(
 	foreground string,
 	background string,
 	options []string,

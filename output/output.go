@@ -2,15 +2,20 @@ package output
 
 import "io"
 
+//Verbosity mode
 const (
 	VerbosityQuiet       = 16
 	VerbosityNormal      = 32
 	VerbosityVerbose     = 64
 	VerbosityVeryVerbose = 128
 	VerbosityDebug       = 256
-	FormatNormal         = 1
-	FormatRaw            = 2
-	FormatPlain          = 4
+)
+
+//Format output
+const (
+	FormatNormal = 1
+	FormatRaw    = 2
+	FormatPlain  = 4
 )
 
 type Formatter interface {

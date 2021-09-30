@@ -16,8 +16,14 @@ type Style struct {
 	handlesHrefGracefully bool
 }
 
-func NewFormatterStyle(foreground string, background string, options []string) *Style {
-	clr := console.NewColorWithOptions(foreground, background, options)
+//NewFormatterStyle creates new Style object
+func NewFormatterStyle(foreground string, background string) *Style {
+	return NewFormatterStyleO(foreground, background, []string{})
+}
+
+//NewFormatterStyleO creates new Style object and set options
+func NewFormatterStyleO(foreground string, background string, options []string) *Style {
+	clr := console.NewColorWithO(foreground, background, options)
 
 	style := &Style{
 		color:                 clr,
@@ -29,9 +35,19 @@ func NewFormatterStyle(foreground string, background string, options []string) *
 	return style
 }
 
+func (s *Style) SetForeground(color string) {
+	s.foreground = color
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
+}
+
+func (s *Style) SetBackground(color string) {
+	s.background = color
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
+}
+
 func (s *Style) Apply(text string) string {
 	if "" != s.href && s.handlesHrefGracefully {
-		text = "\033]8;;" + s.href + "\033" + text + "\033]8;;\033\\"
+		text = "\033]8;;" + s.href + "\033\\" + text + "\033]8;;\033\\"
 	}
 
 	return s.color.Apply(text)
@@ -44,7 +60,7 @@ func (s *Style) SetHref(href string) {
 func (s *Style) SetOption(option string) {
 	if false == strings.Contains(strings.Join(s.options, " "), option) {
 		s.options = append(s.options, option)
-		s.color = console.NewColorWithOptions(s.foreground, s.background, s.options)
+		s.color = console.NewColorWithO(s.foreground, s.background, s.options)
 	}
 }
 
@@ -58,12 +74,12 @@ func (s *Style) UnsetOption(option string) {
 	}
 
 	s.options = options
-	s.color = console.NewColorWithOptions(s.foreground, s.background, s.options)
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
 }
 
 func (s *Style) SetOptions(options []string) {
 	s.options = options
-	s.color = console.NewColorWithOptions(s.foreground, s.background, s.options)
+	s.color = console.NewColorWithO(s.foreground, s.background, s.options)
 }
 
 func defaultHandlesHrefGracefully() bool {

@@ -73,7 +73,7 @@ func TestColor_Apply(t *testing.T) {
 			check := qt.New(t)
 			color := NewColor(v.Foreground, v.Background)
 			if len(v.Options) > 0 {
-				color = NewColorWithOptions(v.Foreground, v.Background, v.Options)
+				color = NewColorWithO(v.Foreground, v.Background, v.Options)
 			}
 
 			output := color.Apply(" ")
