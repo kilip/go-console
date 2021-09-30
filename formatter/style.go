@@ -47,7 +47,7 @@ func (s *Style) SetBackground(color string) {
 
 func (s *Style) Apply(text string) string {
 	if "" != s.href && s.handlesHrefGracefully {
-		text = "\033]8;;" + s.href + "\033" + text + "\033]8;;\033\\"
+		text = "\033]8;;" + s.href + "\033\\" + text + "\033]8;;\033\\"
 	}
 
 	return s.color.Apply(text)

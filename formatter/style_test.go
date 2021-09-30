@@ -121,7 +121,7 @@ func TestStyle_Apply_Href(t *testing.T) {
 	style := NewFormatterStyleO("", "", []string{})
 	style.SetHref("idea://open/?file=/path/SomeFile.php&line=12")
 
-	expected := "\x1b]8;;idea://open/?file=/path/SomeFile.php&line=12\x1bsome URL\x1b]8;;\x1b\\"
+	expected := "\x1b]8;;idea://open/?file=/path/SomeFile.php&line=12\x1b\\some URL\x1b]8;;\x1b\\"
 	checker.Assert(style.Apply("some URL"), qt.Equals, expected)
 
 	os.Setenv("TERMINAL_EMULATOR", prevEmulator)

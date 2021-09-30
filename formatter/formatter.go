@@ -3,7 +3,6 @@ package formatter
 import (
 	"errors"
 	"fmt"
-
 	"regexp"
 	"strings"
 )
@@ -100,10 +99,11 @@ func (f *Formatter) FormatAndWrap(message string, width int) string {
 		tag := tags[i]
 		tag = tag[1 : len(tag)-1]
 		open := false
-		if false == strings.Contains(tags[i], "/") {
-			open = true
-		} else {
+		ix := strings.Index(tag, "/")
+		if 0 == ix {
 			tag = tag[1:]
+		} else {
+			open = true
 		}
 
 		style := f.createStyleFromString(tag)
@@ -166,21 +166,57 @@ func (f *Formatter) applyCurrentStyle(text string, current string, width int, cu
 	}
 
 	if 0 == currentLineLength && "" != current {
-		text = strings.TrimLeft(text, "")
+		text = strings.TrimLeft(text, " ")
+		text = strings.TrimLeft(text, "\n")
 	}
 
 	prefix := ""
 	if currentLineLength > 0 {
 		i := width - currentLineLength
-		prefix = text[0:i] + "\n"
-		text = text[i:]
+		prefixLen := i
+		if len(text) < prefixLen {
+			prefixLen = len(text)
+		}
+		prefix = text[0:prefixLen] + "\n"
+
+		if len(text) < i {
+			text = ""
+		} else {
+			text = text[i:]
+		}
+
 	}
 
 	// preg_match('~(\\n)$~', $text, $matches);
 	regex := regexp.MustCompile(`(\\n)$`)
 	matches := regex.FindAllString(text, -1)
 
-	return currentLineLength, "<info>some info</info>" + strings.Join(matches, " ") + prefix
+	rReplace := fmt.Sprintf("([^\\n]{%d})\\ *", width)
+	regReplace := regexp.MustCompilePOSIX(rReplace)
+	text = prefix + regReplace.ReplaceAllString(text, "$1\n")
+	text = strings.TrimRight(text, "\n")
+	if len(matches) > 0 {
+		text += matches[1]
+	}
+
+	if 0 == currentLineLength && "" != current && current != "\n" {
+		text = "\n" + text
+	}
+
+	lines := strings.Split(text, "\n")
+	for _, line := range lines {
+		currentLineLength += len(line)
+		if width <= currentLineLength {
+			currentLineLength = 0
+		}
+	}
+
+	if f.IsDecorated() {
+		for i, line := range lines {
+			lines[i] = f.styleStack.Current().Apply(line)
+		}
+	}
+	return currentLineLength, strings.Join(lines, "\n")
 }
 
 func (f *Formatter) createStyleFromString(string string) *Style {
