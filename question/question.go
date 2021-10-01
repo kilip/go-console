@@ -12,7 +12,7 @@ type Question struct {
 	hidden                bool
 	hiddenFallback        bool
 	autoCompleterCallback func(input string) []string
-	validator             func(input string) (isValid bool, err error)
+	validator             func(input string) (value interface{}, err error)
 	defaultValue          interface{}
 	trimmable             bool
 	multiline             bool
@@ -20,10 +20,9 @@ type Question struct {
 }
 
 // NewQuestion creates new Question object
-func NewQuestion(q string, defaultValue interface{}) *Question {
+func NewQuestion(q string) *Question {
 	return &Question{
 		question:       q,
-		defaultValue:   defaultValue,
 		hidden:         false,
 		hiddenFallback: true,
 		trimmable:      false,
@@ -39,6 +38,11 @@ func (q *Question) GetQuestion() string {
 // GetDefault returns the default answer value
 func (q *Question) GetDefault() interface{} {
 	return q.defaultValue
+}
+
+// SetDefault sets default value for this question
+func (q *Question) SetDefault(value interface{}) {
+	q.defaultValue = value
 }
 
 // IsMultiline returns whether the user response accepts newline characters
@@ -119,12 +123,12 @@ func (q *Question) SetAutoCompleterCallback(callback func(input string) []string
 }
 
 // SetValidator sets a validator for this question
-func (q *Question) SetValidator(validator func(input string) (valid bool, error error)) {
+func (q *Question) SetValidator(validator func(input string) (value interface{}, error error)) {
 	q.validator = validator
 }
 
 // GetValidator returns the validator for this question
-func (q *Question) GetValidator() func(input string) (valid bool, error error) {
+func (q *Question) GetValidator() func(input string) (value interface{}, error error) {
 	return q.validator
 }
 

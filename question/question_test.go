@@ -6,8 +6,12 @@ import (
 )
 
 func createDefQuestion() *Question {
-	return NewQuestion("Test question", "default")
+	q := NewQuestion("Test question")
+	q.SetDefault("default")
+
+	return q
 }
+
 func TestQuestion_GetQuestion(t *testing.T) {
 	c := qt.New(t)
 	q := createDefQuestion()
@@ -76,7 +80,7 @@ func TestQuestion_Validator(t *testing.T) {
 	c := qt.New(t)
 	q := createDefQuestion()
 
-	validator := func(input string) (valid bool, err error) {
+	validator := func(input string) (valid interface{}, err error) {
 		return true, nil
 	}
 
