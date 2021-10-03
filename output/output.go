@@ -58,6 +58,11 @@ func (o *Output) GetFormatter() *formatter.Formatter {
 	return o.formatter
 }
 
+// IsDecorated returns whether this Output is decorated
+func (o *Output) IsDecorated() bool {
+	return o.formatter.IsDecorated()
+}
+
 // IsQuite returns whether verbosity is quite
 func (o *Output) IsQuite() bool {
 	return VerbosityQuiet == o.verbosity
