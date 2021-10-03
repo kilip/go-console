@@ -2,9 +2,9 @@ package style
 
 import (
 	"fmt"
-	"github.com/kilip/console/formatter"
-	"github.com/kilip/console/helper"
-	"github.com/kilip/console/output"
+	"github.com/kilip/go-console/formatter"
+	"github.com/kilip/go-console/helper"
+	"github.com/kilip/go-console/output"
 	"github.com/kilip/go-wordwrap"
 	"io"
 	"strings"

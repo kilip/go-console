@@ -2,8 +2,8 @@ package style
 
 import (
 	qt "github.com/frankban/quicktest"
-	"github.com/kilip/console/formatter"
-	"github.com/kilip/console/output"
+	"github.com/kilip/go-console/formatter"
+	"github.com/kilip/go-console/output"
 	"strings"
 	"testing"
 )

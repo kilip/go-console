@@ -2,7 +2,7 @@ package output
 
 import (
 	qt "github.com/frankban/quicktest"
-	"github.com/kilip/console/formatter"
+	"github.com/kilip/go-console/formatter"
 	"github.com/stretchr/testify/mock"
 	"testing"
 )

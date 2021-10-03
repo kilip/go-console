@@ -1,7 +1,7 @@
 package style
 
 import (
-	"github.com/kilip/console/output"
+	"github.com/kilip/go-console/output"
 	"io"
 	"strings"
 )

@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"github.com/kilip/console/formatter"
+	"github.com/kilip/go-console/formatter"
 	"regexp"
 )
 

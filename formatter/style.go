@@ -1,7 +1,7 @@
 package formatter
 
 import (
-	"github.com/kilip/console"
+	"github.com/kilip/go-console"
 	"os"
 	"strconv"
 	"strings"
