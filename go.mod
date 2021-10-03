@@ -1,4 +1,4 @@
-module github.com/kilip/console
+module github.com/kilip/go-console
 
 go 1.17
 
