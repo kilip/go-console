@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/frankban/quicktest v1.13.1
+	github.com/kilip/go-wordwrap v0.1.0
 	github.com/stretchr/testify v1.7.0
 )
 

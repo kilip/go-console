@@ -2,6 +2,7 @@ package output
 
 import (
 	qt "github.com/frankban/quicktest"
+	"github.com/kilip/console/formatter"
 	"github.com/stretchr/testify/mock"
 	"testing"
 )
@@ -77,7 +78,7 @@ func TestOutput_Verbosity(t *testing.T) {
 	for _, v := range cases {
 		t.Run(v.Label, func(t *testing.T) {
 			w := new(mockObject)
-			o := NewOutput(w, w)
+			o := NewOutput(w, formatter.NewFormatter())
 			o.SetVerbosity(v.Verbosity)
 			cc := qt.New(t)
 
@@ -128,7 +129,7 @@ func TestOutput_Write(t *testing.T) {
 		t.Run(val.Name, func(t *testing.T) {
 			cc := qt.New(t)
 			w := new(mockObject)
-			o := NewOutput(w, w)
+			o := NewOutput(w, formatter.NewFormatter())
 
 			o.SetVerbosity(val.Verbosity)
 

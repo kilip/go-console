@@ -1,6 +1,9 @@
 package output
 
-import "io"
+import (
+	"github.com/kilip/console/formatter"
+	"io"
+)
 
 //Verbosity mode
 const (
@@ -18,17 +21,21 @@ const (
 	FormatPlain  = 4
 )
 
-type Formatter interface {
-	Format(message string) string
-}
-
+// Output is base class for output classes.
+// There are five levels of verbosity:
+// * normal: no option passed given the normal output
+// * verbose: more output
+// * very verbose: highly extended output
+// * debug: all debug output
+// * quite: no output at all
 type Output struct {
 	writer    io.Writer
 	verbosity int
-	formatter Formatter
+	formatter *formatter.Formatter
 }
 
-func NewOutput(writer io.Writer, formatter Formatter) *Output {
+// NewOutput creates and returns new Output class
+func NewOutput(writer io.Writer, formatter *formatter.Formatter) *Output {
 	return &Output{
 		writer:    writer,
 		verbosity: VerbosityNormal,
@@ -36,50 +43,68 @@ func NewOutput(writer io.Writer, formatter Formatter) *Output {
 	}
 }
 
+// SetVerbosity sets the verbosity of the output
 func (o *Output) SetVerbosity(verbosity int) {
 	o.verbosity = verbosity
 }
 
+// GetVerbosity gets current verbosity of the output
 func (o *Output) GetVerbosity() int {
 	return o.verbosity
 }
 
-func (o *Output) GetFormatter() Formatter {
+// GetFormatter returns current output formatter.Formatter instance
+func (o *Output) GetFormatter() *formatter.Formatter {
 	return o.formatter
 }
 
+// IsDecorated returns whether this Output is decorated
+func (o *Output) IsDecorated() bool {
+	return o.formatter.IsDecorated()
+}
+
+// IsQuite returns whether verbosity is quite
 func (o *Output) IsQuite() bool {
 	return VerbosityQuiet == o.verbosity
 }
 
+// IsVerbose returns whether verbosity is verbose
 func (o *Output) IsVerbose() bool {
 	return VerbosityVerbose <= o.verbosity
 }
 
+// IsVeryVerbose returns whether verbosity is very verbose
 func (o *Output) IsVeryVerbose() bool {
 	return VerbosityVeryVerbose <= o.verbosity
 }
 
+// IsDebug returns whether verbosity is debug
 func (o *Output) IsDebug() bool {
 	return VerbosityDebug <= o.verbosity
 }
 
+// Write writes a message into the output
 func (o *Output) Write(message string) error {
 	return o.WriteO(message, FormatNormal)
 }
 
+// WriteO writes a message into the output with defined options
 func (o *Output) WriteO(message string, options int) error {
 	return o.doWrite(message, false, options)
 }
 
+// Writeln writes a message into the output and adds a new line at the end
 func (o *Output) Writeln(message string) error {
 	return o.WritelnO(message, FormatNormal)
 }
 
+// WritelnO writes a message into the output and adds a new line at the end
+// with given options behavior
 func (o *Output) WritelnO(message string, options int) error {
 	return o.doWrite(message, true, options)
 }
 
+// doWrite perform an actual write to the io.Writer output
 func (o *Output) doWrite(message string, newLine bool, options int) error {
 	formatted := message
 	types := FormatNormal | FormatRaw | FormatPlain
