@@ -27,7 +27,7 @@ func NewDefaultStyle(reader io.Reader, writer io.Writer) *DefaultStyle {
 }
 
 func (ds *DefaultStyle) Block(messages string, blockType string) {
-	ds.BlockO(messages, blockType, "", " ", false, true)
+	ds.BlockO(messages, blockType, "info", " ", false, true)
 }
 func (ds *DefaultStyle) BlockO(messages, blockType string, style string, prefix string, padding bool, escape bool) {
 	ds.autoPrependBlock()
