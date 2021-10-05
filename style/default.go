@@ -7,21 +7,30 @@ import (
 	"github.com/kilip/go-console/output"
 	"github.com/kilip/go-wordwrap"
 	"io"
+	"runtime"
 	"strings"
 )
 
 type DefaultStyle struct {
-	lineLength int
+	lineLength     int
+	bufferedOutput *output.TrimmedBufferOutput
 	*OutputStyle
 }
 
-func NewDefaultStyle(reader io.Reader, writer io.Writer) *DefaultStyle {
-	out := output.NewOutput(writer, formatter.NewFormatter())
+func NewDefaultStyle(reader io.Reader, o output.IOutput) *DefaultStyle {
+
+	maxLength := 2
+	if runtime.GOOS == "windows" {
+		maxLength = 4
+	}
+	bufferedOutput := output.NewTrimmedBufferOutput(maxLength)
+
 	return &DefaultStyle{
-		120,
-		&OutputStyle{
-			input:  reader,
-			Output: out,
+		lineLength:     120,
+		bufferedOutput: bufferedOutput,
+		OutputStyle: &OutputStyle{
+			input:   reader,
+			IOutput: o,
 		},
 	}
 }
@@ -29,15 +38,20 @@ func NewDefaultStyle(reader io.Reader, writer io.Writer) *DefaultStyle {
 func (ds *DefaultStyle) Block(messages string, blockType string) {
 	ds.BlockO(messages, blockType, "info", " ", false, true)
 }
+
 func (ds *DefaultStyle) BlockO(messages, blockType string, style string, prefix string, padding bool, escape bool) {
 	ds.autoPrependBlock()
 
 	text := ds.createBlock(messages, blockType, style, prefix, padding, escape)
-	_ = ds.Writeln(text)
+	ds.Writeln(text)
+}
+
+func (ds *DefaultStyle) Caution(message string) {
+	ds.BlockO(message, "CAUTION", "fg=white;bg=red", " ! ", true, true)
 }
 
 func (ds *DefaultStyle) autoPrependBlock() {
-	_ = ds.NewLine()
+	ds.NewLine()
 }
 
 func (ds *DefaultStyle) createBlock(messages string, blockType string, style string, prefix string, padding bool, escape bool) string {
@@ -109,4 +123,22 @@ func (ds *DefaultStyle) createBlock(messages string, blockType string, style str
 	ret := strings.Join(lines, "\n")
 
 	return ret
+}
+
+func (ds *DefaultStyle) writeBuffer(message string, newLine bool, options int) {
+	// We need to know if the last chars are newLine
+	ds.WriteO(message, newLine, options)
+	ds.bufferedOutput.WriteO(message, newLine, options)
+}
+
+func (ds *DefaultStyle) Write(message string) {
+	ds.writeBuffer(message, false, output.FormatNormal)
+}
+
+func (ds *DefaultStyle) Writeln(messages string) {
+	ds.writeBuffer(messages, true, output.FormatNormal)
+}
+
+func (ds *DefaultStyle) WritelnO(messages string, options int) {
+	ds.writeBuffer(messages, true, options)
 }

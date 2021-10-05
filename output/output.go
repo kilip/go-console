@@ -2,23 +2,6 @@ package output
 
 import (
 	"github.com/kilip/go-console/formatter"
-	"io"
-)
-
-//Verbosity mode
-const (
-	VerbosityQuiet       = 16
-	VerbosityNormal      = 32
-	VerbosityVerbose     = 64
-	VerbosityVeryVerbose = 128
-	VerbosityDebug       = 256
-)
-
-//Format output
-const (
-	FormatNormal = 1
-	FormatRaw    = 2
-	FormatPlain  = 4
 )
 
 // Output is base class for output classes.
@@ -29,18 +12,18 @@ const (
 // * debug: all debug output
 // * quite: no output at all
 type Output struct {
-	writer    io.Writer
 	verbosity int
 	formatter *formatter.Formatter
+	doWrite   func(message string, newLine bool)
 }
 
 // NewOutput creates and returns new Output class
-func NewOutput(writer io.Writer, formatter *formatter.Formatter) *Output {
-	return &Output{
-		writer:    writer,
+func NewOutput(formatter *formatter.Formatter) *Output {
+	o := &Output{
 		verbosity: VerbosityNormal,
 		formatter: formatter,
 	}
+	return o
 }
 
 // SetVerbosity sets the verbosity of the output
@@ -53,9 +36,18 @@ func (o *Output) GetVerbosity() int {
 	return o.verbosity
 }
 
+func (o *Output) SetFormatter(formatter *formatter.Formatter) {
+	o.formatter = formatter
+}
+
 // GetFormatter returns current output formatter.Formatter instance
 func (o *Output) GetFormatter() *formatter.Formatter {
 	return o.formatter
+}
+
+// SetDecorated sets the Output decorated flag
+func (o *Output) SetDecorated(decorated bool) {
+	o.formatter.SetDecorated(decorated)
 }
 
 // IsDecorated returns whether this Output is decorated
@@ -84,28 +76,12 @@ func (o *Output) IsDebug() bool {
 }
 
 // Write writes a message into the output
-func (o *Output) Write(message string) error {
-	return o.WriteO(message, FormatNormal)
+func (o *Output) Write(message string) {
+	o.WriteO(message, false, FormatNormal)
 }
 
 // WriteO writes a message into the output with defined options
-func (o *Output) WriteO(message string, options int) error {
-	return o.doWrite(message, false, options)
-}
-
-// Writeln writes a message into the output and adds a new line at the end
-func (o *Output) Writeln(message string) error {
-	return o.WritelnO(message, FormatNormal)
-}
-
-// WritelnO writes a message into the output and adds a new line at the end
-// with given options behavior
-func (o *Output) WritelnO(message string, options int) error {
-	return o.doWrite(message, true, options)
-}
-
-// doWrite perform an actual write to the io.Writer output
-func (o *Output) doWrite(message string, newLine bool, options int) error {
+func (o *Output) WriteO(message string, newLine bool, options int) {
 	formatted := message
 	types := FormatNormal | FormatRaw | FormatPlain
 	formatType := types & options
@@ -122,7 +98,7 @@ func (o *Output) doWrite(message string, newLine bool, options int) error {
 	}
 
 	if verbosity > o.verbosity {
-		return nil
+		return
 	}
 
 	switch formatType {
@@ -131,11 +107,16 @@ func (o *Output) doWrite(message string, newLine bool, options int) error {
 		break
 	}
 
-	if newLine {
-		formatted += "\n"
-	}
+	o.doWrite(formatted, newLine)
+}
 
-	_, e := o.writer.Write([]byte(formatted))
+// Writeln writes a message into the output and adds a new line at the end
+func (o *Output) Writeln(message string) {
+	o.WritelnO(message, FormatNormal)
+}
 
-	return e
+// WritelnO writes a message into the output and adds a new line at the end
+// with given options behavior
+func (o *Output) WritelnO(message string, options int) {
+	o.WriteO(message, true, options)
 }

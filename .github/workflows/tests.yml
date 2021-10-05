@@ -2,17 +2,17 @@ name: "Tests"
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   test:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        go: [1.16, 1.17]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        go: [ 1.16, 1.17 ]
         include:
           - os: ubuntu-latest
             go: 1.17
@@ -37,12 +37,12 @@ jobs:
         run: echo "COVERAGE=1" >> $GITHUB_ENV
 
       - name: Run tests
-        run: go test -race ./...
+        run: go test -race -v ./...
         if: false == matrix.coverage
 
       - name: Run tests with coverage
         if: matrix.coverage
-        run: go test -race ./... -coverprofile=coverage.out -covermode=atomic
+        run: go test -race -v ./... -coverprofile=coverage.out -covermode=atomic
 
       - name: Upload coverage
         if: matrix.coverage

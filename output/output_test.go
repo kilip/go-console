@@ -3,23 +3,31 @@ package output
 import (
 	qt "github.com/frankban/quicktest"
 	"github.com/kilip/go-console/formatter"
-	"github.com/stretchr/testify/mock"
 	"testing"
 )
 
-type mockObject struct {
-	mock.Mock
+type TestOutput struct {
 	Buffer string
+	*Output
 }
 
-func (w *mockObject) Write(p []byte) (nn int, err error) {
-	w.Buffer += string(p)
-	return 0, nil
+func (to *TestOutput) doWrite(message string, newLine bool) {
+	to.Buffer += message
+
+	if newLine {
+		to.Buffer += "\n"
+	}
 }
 
-func (w *mockObject) Format(message string) string {
-	//w.Called(message)
-	return message
+func NewTestOutput() *TestOutput {
+	output := NewOutput(formatter.NewFormatter())
+	o := &TestOutput{
+		Output: output,
+	}
+
+	output.doWrite = o.doWrite
+
+	return o
 }
 
 func TestOutput_Verbosity(t *testing.T) {
@@ -77,8 +85,7 @@ func TestOutput_Verbosity(t *testing.T) {
 
 	for _, v := range cases {
 		t.Run(v.Label, func(t *testing.T) {
-			w := new(mockObject)
-			o := NewOutput(w, formatter.NewFormatter())
+			o := NewTestOutput()
 			o.SetVerbosity(v.Verbosity)
 			cc := qt.New(t)
 
@@ -128,22 +135,17 @@ func TestOutput_Write(t *testing.T) {
 	for _, val := range cases {
 		t.Run(val.Name, func(t *testing.T) {
 			cc := qt.New(t)
-			w := new(mockObject)
-			o := NewOutput(w, formatter.NewFormatter())
-
+			o := NewTestOutput()
 			o.SetVerbosity(val.Verbosity)
 
-			w.On("Format")
-			w.On("Write").Return(0, nil)
-
 			o.Write("1")
-			o.WriteO("2", VerbosityQuiet)
-			o.WriteO("3", VerbosityNormal)
-			o.WriteO("4", VerbosityVerbose)
-			o.WriteO("5", VerbosityVeryVerbose)
-			o.WriteO("6", VerbosityDebug)
+			o.WriteO("2", false, VerbosityQuiet)
+			o.WriteO("3", false, VerbosityNormal)
+			o.WriteO("4", false, VerbosityVerbose)
+			o.WriteO("5", false, VerbosityVeryVerbose)
+			o.WriteO("6", false, VerbosityDebug)
 
-			cc.Assert(w.Buffer, qt.Equals, val.Expected)
+			cc.Assert(o.Buffer, qt.Equals, val.Expected)
 		})
 	}
 

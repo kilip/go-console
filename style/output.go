@@ -6,18 +6,18 @@ import (
 	"strings"
 )
 
-//OutputStyle Decorates Output to add console style guide helpers.
+// OutputStyle Decorates Output to add console style guide helpers.
 type OutputStyle struct {
 	input io.Reader
-	*output.Output
+	output.IOutput
 }
 
-//NewLine Add newline.
-func (os *OutputStyle) NewLine() error {
-	return os.NewLineC(1)
+// NewLine Add newline.
+func (os *OutputStyle) NewLine() {
+	os.NewLineC(1)
 }
 
-//NewLineC Add given count newline(s).
-func (os *OutputStyle) NewLineC(count int) error {
-	return os.Write(strings.Repeat("\n", count))
+// NewLineC Add given count newline(s).
+func (os *OutputStyle) NewLineC(count int) {
+	os.Write(strings.Repeat("\n", count))
 }

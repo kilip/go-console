@@ -40,17 +40,12 @@ func NewReadWriterMock() *buffMock {
 func TestOutputStyle_NewLineC(t *testing.T) {
 	ch := qt.New(t)
 	buff := NewReadWriterMock()
-	out := output.NewOutput(buff, formatter.NewFormatter())
-	os := &OutputStyle{input: buff, Output: out}
+	out := output.NewStreamOutput(buff, formatter.NewFormatter())
+	os := &OutputStyle{input: buff, IOutput: out}
 
-	err := os.NewLine()
-	ch.Assert(err, qt.IsNil)
+	os.NewLine()
 	ch.Assert(buff.Output, qt.Equals, "\n")
 
-	err = os.NewLineC(4)
-	ch.Assert(err, qt.IsNil)
+	os.NewLineC(4)
 	ch.Assert(buff.Output, qt.Equals, strings.Repeat("\n", 5))
-
-	err = os.Write("\n")
-	ch.Assert(err, qt.IsNil)
 }
