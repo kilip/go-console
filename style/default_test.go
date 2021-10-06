@@ -67,6 +67,10 @@ func getBlockTestCase() []outputTestCase {
 func TestDefaultStyle_Output(t *testing.T) {
 	cases := getBlockTestCase()
 
+	if runtime.GOOS == "windows" {
+		t.Skip("Skip test on windows")
+	}
+
 	for _, tCase := range cases {
 		t.Run(tCase.Name, func(t *testing.T) {
 			c := qt.New(t)
