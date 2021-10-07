@@ -28,8 +28,8 @@ type IOutput interface {
 	IsQuite() bool
 	IsVerbose() bool
 	IsVeryVerbose() bool
-	Write(message string)
-	WriteO(message string, newLine bool, options int)
+	Write(message interface{})
+	WriteO(message interface{}, newLine bool, options int)
 	Writeln(message string)
 	WritelnO(message string, options int)
 }

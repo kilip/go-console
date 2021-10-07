@@ -28,7 +28,10 @@ func (tb *TrimmedBufferOutput) doWrite(message string, newLine bool) {
 		tb.buffer += "\n"
 	}
 
-	tb.buffer = tb.buffer[0:tb.maxLength]
+	offset := len(tb.buffer) - tb.maxLength
+	if offset > 0 {
+		tb.buffer = tb.buffer[offset:]
+	}
 }
 
 // Fetch empties buffer and returns its content

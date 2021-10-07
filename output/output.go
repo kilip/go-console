@@ -2,6 +2,7 @@ package output
 
 import (
 	"github.com/kilip/go-console/formatter"
+	"github.com/kilip/go-console/helper"
 )
 
 // Output is base class for output classes.
@@ -76,13 +77,12 @@ func (o *Output) IsDebug() bool {
 }
 
 // Write writes a message into the output
-func (o *Output) Write(message string) {
+func (o *Output) Write(message interface{}) {
 	o.WriteO(message, false, FormatNormal)
 }
 
 // WriteO writes a message into the output with defined options
-func (o *Output) WriteO(message string, newLine bool, options int) {
-	formatted := message
+func (o *Output) WriteO(message interface{}, newLine bool, options int) {
 	types := FormatNormal | FormatRaw | FormatPlain
 	formatType := types & options
 
@@ -101,13 +101,16 @@ func (o *Output) WriteO(message string, newLine bool, options int) {
 		return
 	}
 
-	switch formatType {
-	case FormatNormal:
-		formatted = o.formatter.Format(formatted)
-		break
+	messages := helper.TextToSlices(message)
+	for _, m := range messages {
+		formatted := m
+		switch formatType {
+		case FormatNormal:
+			formatted = o.formatter.Format(formatted)
+			break
+		}
+		o.doWrite(formatted, newLine)
 	}
-
-	o.doWrite(formatted, newLine)
 }
 
 // Writeln writes a message into the output and adds a new line at the end
