@@ -159,7 +159,7 @@ func (f *Formatter) applyCurrentStyle(text string, current string, width int, cu
 	}
 
 	if 0 == width {
-		if f.decorated {
+		if f.IsDecorated() {
 			return currentLineLength, f.styleStack.Current().Apply(text)
 		}
 		return currentLineLength, text
